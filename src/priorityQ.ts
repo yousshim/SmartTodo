@@ -1,76 +1,65 @@
-export default class PriorityQ {
+interface PQinterface<T> {
+  id: number;
+  isGreaterThan: (a: T) => boolean;
+}
+
+const left = (n: number): number => n * 2 + 1;
+const right = (n: number): number => n * 2 + 2;
+const parent = (n: number): number => Math.floor((n - 1) / 2);
+
+type KeyMap = { [key: number]: number };
+
+export default class PriorityQ<T extends PQinterface<T>> {
   constructor(
-    private data: number[] = [],
-    public size: number = 0 // private reverseIndex: number[] = []
+    private data: T[] = [],
+    public size: number = 0,
+    private keyMap: KeyMap = {}
   ) {}
 
-  private left(n: number): number {
-    // return the index of the left child of the node at index n
-    const leftChildIdx = n * 2 + 1;
-    return leftChildIdx;
+  private swap(i: number, j: number) {
+    [this.data[i], this.data[j]] = [this.data[j], this.data[i]];
+    this.keyMap[this.data[i].id] = j;
+    this.keyMap[this.data[j].id] = i;
   }
 
-  private right(n: number): number {
-    // return the index of the right child of the node at index n
-    const rightChildIdx = n * 2 + 2;
-    return rightChildIdx;
-  }
-
-  private parent(n: number): number {
-    // return the index of the parent of the node at index n
-    const parentIdx = Math.floor((n - 1) / 2);
-    return parentIdx;
-  }
-
-  pop(): number | undefined {
-    // pop the top element of the heap
+  pop(): T | undefined {
     const res = this.data[0];
-    this.size -= 1;
-    const last = this.data.pop();
-    if (this.size == 0 || last === undefined) {
-      return res;
-    }
-    this.data[0] = last;
-    // Heapify
-    var n = 0;
-    var maxIdx = n;
-    if (this.size > this.left(n) && this.size > this.right(n)) {
-      maxIdx =
-        this.data[this.left(n)] > this.data[this.right(n)]
-          ? this.left(n)
-          : this.right(n);
-    } else if (this.size >= this.left(n)) {
-      maxIdx = this.left(n);
-    } else if (this.size >= this.right(n)) {
-      maxIdx = this.right(n);
-    }
-    while (this.data[maxIdx] > this.data[n] && maxIdx >= 0) {
-      [this.data[n], this.data[maxIdx]] = [this.data[maxIdx], this.data[n]];
-      n = maxIdx;
+    delete this.keyMap[res.id];
+    this.data[0] = this.data[--this.size];
+    this.keyMap[this.data[0].id] = 0;
 
-      var maxIdx =
-        this.data[this.left(n)] > this.data[this.right(n)]
-          ? this.left(n)
-          : this.right(n);
+    var n = 0;
+    while (left(n) < this.size) {
+      if (
+        right(n) >= this.size ||
+        this.data[left(n)].isGreaterThan(this.data[right(n)])
+      ) {
+        if (this.data[left(n)].isGreaterThan(this.data[n])) {
+          this.swap(left(n), n);
+          n = left(n);
+        } else {
+          break;
+        }
+      } else {
+        if (this.data[right(n)].isGreaterThan(this.data[n])) {
+          this.swap(right(n), n);
+          n = right(n);
+        } else {
+          break;
+        }
+      }
     }
     return res;
   }
 
-  push(value: number) {
-    // push a new element to the heap
-    this.size += 1;
-    this.data.push(value);
-    // Heapify
+  push(val: T) {
+    this.data[this.size] = val;
+    this.keyMap[val.id] = this.size++;
+
     var n = this.size - 1;
-    var pIdx = this.parent(n);
-    while (this.data[n] > this.data[pIdx] && pIdx >= 0) {
-      [this.data[n], this.data[pIdx]] = [this.data[pIdx], this.data[n]];
-      n = pIdx;
-      pIdx = this.parent(n);
+    while (n > 0 && this.data[n].isGreaterThan(this.data[parent(n)])) {
+      this.swap(n, parent(n));
+      n = parent(n);
     }
   }
-
-  //   reduce(id: number) {
-  //     throw new Error("Not Implimented");
-  //   }
 }
