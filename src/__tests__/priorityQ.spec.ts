@@ -8,7 +8,7 @@ heap should always pop the same max as the array
 *********************************************************/
 
 class testType {
-  constructor(public id: number, public value: number) {}
+  constructor(public id:string, public value: number) {}
   isGreaterThan(other: testType): boolean {
     return this.value > other.value;
   }
@@ -58,7 +58,7 @@ class PopCommand implements fc.Command<Model, PriorityQ<testType>> {
 const allCommands = [
   fc
     .record({
-      id: fc.nat(),
+      id: fc.string(),
       value: fc.integer(),
     })
     .map((v) => new PushCommand(new testType(v.id, v.value))),

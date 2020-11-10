@@ -1,5 +1,5 @@
 interface PQinterface<T> {
-  id: number;
+  id: string;
   isGreaterThan: (a: T) => boolean;
 }
 
@@ -7,7 +7,7 @@ const left = (n: number): number => n * 2 + 1;
 const right = (n: number): number => n * 2 + 2;
 const parent = (n: number): number => Math.floor((n - 1) / 2);
 
-type KeyMap = { [key: number]: number };
+type KeyMap = { [key: string]: number };
 
 export default class PriorityQ<T extends PQinterface<T>> {
   constructor(
