@@ -27,6 +27,11 @@
     "typescript": "^4.0.5"
   },
   "dependencies": {
-    "mongoose": "^5.10.13"
+    "@types/express": "^4.17.8",
+    "@types/mongoose": "^5.10.0",
+    "@types/uuid": "^8.3.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.13",
+    "uuid": "^8.3.1"
   }
 }
