@@ -1,0 +1,24 @@
+GET http://localhost:3000/task?id=5fabe0af33decb65c4a22c6d HTTP/1.1
+
+###
+
+POST http://localhost:3000/task HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "5fabe0af33decb65c4a22c6d",
+    "name": "task one",
+    "description": "description",
+    "dueDate": "11/1/2021",
+    "tags": ["Urgent"]
+}
+
+###
+
+POST http://localhost:3000/add-user HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "user",
+    "email": "user@email.com"
+}

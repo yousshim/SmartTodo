@@ -1,6 +1,20 @@
-import { Schema, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
+import Task from "./task";
 
-const UserSchema = new Schema({
+interface IUser extends Document {
+  name: string;
+  email: string;
+  tasks: {
+    id: string;
+    name: string;
+    description: string;
+    createDate: string;
+    dueDate: string;
+    tags: string[];
+  }[];
+}
+
+const UserSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
@@ -9,36 +23,16 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  tasks: {
-    id: {
-      type: String,
-      required: true,
+  tasks: [
+    {
+      id: String,
+      name: String,
+      description: String,
+      createDate: String,
+      dueDate: String,
+      tags: [String],
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    createDate: {
-      type: Date,
-      required: true,
-    },
-    dueDate: {
-      type: Date,
-      required: true,
-    },
-    dependency: {
-      type: String,
-      required: true,
-    },
-    tags: {
-      type: String,
-      required: true,
-    },
-  },
+  ],
 });
 
-export const User = model("user", UserSchema);
+export const User = model<IUser>("user", UserSchema);

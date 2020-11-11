@@ -11,7 +11,7 @@ type KeyMap = { [key: string]: number };
 
 export default class PriorityQ<T extends PQinterface<T>> {
   constructor(
-    private data: T[] = [],
+    public data: T[] = [],
     public size: number = 0,
     private keyMap: KeyMap = {}
   ) {}
@@ -23,6 +23,9 @@ export default class PriorityQ<T extends PQinterface<T>> {
   }
 
   pop(): T | undefined {
+    if (this.size == 0) {
+      return undefined;
+    }
     const res = this.data[0];
     delete this.keyMap[res.id];
     this.data[0] = this.data[--this.size];
